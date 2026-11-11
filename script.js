@@ -144,7 +144,7 @@ new IntersectionObserver(([e]) => siteHeader.classList.toggle('show-resume', !e.
 // Resume button: every 12s (after the shake) the label types out a nudge, holds, then goes back
 const nudgeBtn = document.querySelector('.btn-shake'), nudgeLabel = nudgeBtn.querySelector('.label');
 if (!reduceMotion) {
-  const original = nudgeLabel.textContent, nudge = 'Psst! Grab my resume!';
+  const original = nudgeLabel.textContent, nudge = 'Hey! Grab my resume!';
   nudgeLabel.textContent = nudge; // measure the longer text so the button doesn't resize while typing
   const w = nudgeBtn.offsetWidth;
   nudgeLabel.textContent = original;
