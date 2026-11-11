@@ -99,7 +99,11 @@ section { padding-block: 4rem; }
 .card .links { margin-top: auto; margin-bottom: 0; display: flex; gap: 1rem; }
 
 .lead { font-size: 1.1rem; max-width: 60ch; margin: 0 0 1.5rem; }
+.services { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
 .services .card p { margin: 0; }
+
+.icon { width: 1.1em; height: 1.1em; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vertical-align: -.2em; }
+.icon-lg { width: 1.75rem; height: 1.75rem; color: var(--accent); margin-bottom: .75rem; }
 
 /* Tags */
 .tags { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin: 0 0 1rem; }
