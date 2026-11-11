@@ -5,7 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Juniel Aldrin Adlawan — Software Developer</title>
   <meta name="description" content="Portfolio of Juniel Aldrin Adlawan, software developer specializing in full-stack development, with 6+ years building Java back-end systems and REST APIs, plus React and React Native front ends, focused on AI-assisted development.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://junaldadlawan.github.io/portfolio-web/">
+  <meta property="og:title" content="Juniel Aldrin Adlawan — Software Developer">
+  <meta property="og:description" content="Full-stack development, Java/Spring Boot APIs, React and React Native apps, and process automation.">
+  <meta property="og:image" content="https://junaldadlawan.github.io/portfolio-web/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
+  <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
   <header class="site-header">
@@ -27,17 +37,23 @@
     <section id="hero" class="hero container">
       <img src="profile.png" alt="Juniel Aldrin Adlawan" class="avatar" width="433" height="577">
       <div>
+      <p class="status" aria-label="Available for freelance work"><span class="kw">const</span> status <span class="op">=</span> <span class="str">"open for freelance work"</span>;</p>
       <p class="prompt">$ whoami</p>
       <h1>Juniel Aldrin Adlawan</h1>
       <p class="tagline">Software Developer — full-stack development with Java/Spring Boot back ends, React web and React Native mobile front ends. AI-assisted development and rapid prototyping.</p>
       <div class="cta">
         <a href="#projects" class="btn btn-primary">View projects</a>
         <a href="#contact" class="btn">Contact me</a>
+        <a href="https://docs.google.com/document/d/1rfuIOHcXIcdWrLoxf8EgltinfysWP2np/export?format=pdf" class="btn btn-shake"><span class="bubble" aria-hidden="true">Psst! Grab my resume!</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></svg> Download resume</a>
       </div>
+      <ul class="stats">
+        <li><strong><span class="count" data-to="6">6</span><span class="plus">+</span> yrs</strong><span>enterprise experience</span></li>
+        <li><strong><span class="count" data-to="3">3</span></strong><span>n8n certifications</span></li>
+      </ul>
       </div>
     </section>
 
-    <section id="about" class="container">
+    <section id="about" class="container reveal">
       <h2><span class="accent">01.</span> about</h2>
       <p>
         Software developer with 6+ years of enterprise experience building Java back-end systems,
@@ -50,7 +66,7 @@
       </p>
     </section>
 
-    <section id="services" class="container">
+    <section id="services" class="container reveal">
       <h2><span class="accent">02.</span> services</h2>
       <p class="lead">Have an idea or a problem to solve? I can take it from requirements to a working, deployed product.</p>
       <div class="cards services">
@@ -93,10 +109,11 @@
       <p class="cta"><a href="#contact" class="btn btn-primary">Let's build it together</a></p>
     </section>
 
-    <section id="projects" class="container">
+    <section id="projects" class="container reveal">
       <h2><span class="accent">03.</span> projects</h2>
       <div class="cards">
         <article class="card">
+          <a href="https://event-ticketing-staging.netlify.app/"><img src="images/ticketing.jpg" alt="Home page of the event ticketing web app" class="card-img" width="1280" height="800" loading="lazy"></a>
           <h3>Event Ticketing Platform</h3>
           <p>Full-stack ticketing marketplace: a Spring Boot REST API (seating charts, checkout and payments, promo codes, waitlists, resale; JWT security, 190 automated test files), a React web app, and an Expo mobile QR check-in scanner with offline mode. Deployed to AWS with Terraform and GitHub Actions CI/CD.</p>
           <ul class="tags"><li>Java 21</li><li>Spring Boot</li><li>PostgreSQL</li><li>React</li><li>Expo</li><li>AWS</li><li>Terraform</li></ul>
@@ -116,7 +133,7 @@
       </div>
     </section>
 
-    <section id="skills" class="container">
+    <section id="skills" class="container reveal">
       <h2><span class="accent">04.</span> skills</h2>
       <div class="skill-groups">
         <div>
@@ -142,7 +159,7 @@
       </div>
     </section>
 
-    <section id="experience" class="container">
+    <section id="experience" class="container reveal">
       <h2><span class="accent">05.</span> experience</h2>
       <ol class="timeline">
         <li>
@@ -186,7 +203,7 @@
         n8n: Integrations: APIs &amp; Connected Workflows · Quickstart · Essentials (2026)</p>
     </section>
 
-    <section id="contact" class="container">
+    <section id="contact" class="container reveal">
       <h2><span class="accent">06.</span> contact</h2>
       <p>Open to new opportunities. Say hi:</p>
       <p class="contact-links">
