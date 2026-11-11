@@ -40,7 +40,7 @@ if (!reduceMotion) {
   const type = () => {
     tagline.textContent = full.slice(0, ++i);
     if (i < full.length) setTimeout(type, 18);
-    else setTimeout(() => tagline.classList.remove('typing'), 1500);
+    else { setTimeout(() => tagline.classList.remove('typing'), 1500); startNudge(); } // the resume nudge waits until the tagline is done so the eye isn't pulled away
   };
   setTimeout(type, 400);
 }
@@ -67,28 +67,47 @@ document.querySelectorAll('.card').forEach((card) => {
 
 // Highlight the menu link of the section in view
 const navLinks = [...links.querySelectorAll('a')];
-const navIO = new IntersectionObserver((entries) => entries.forEach((e) => {
-  if (!e.isIntersecting) return;
+const navSections = [...document.querySelectorAll('main > section[id]')];
+let navTicking = false;
+function updateNav() {
+  navTicking = false;
+  // The active section is the last one whose top has passed the middle of the screen (a clicked link centres its section); at the very bottom, the last section.
+  let current = navSections.filter((s) => s.getBoundingClientRect().top <= innerHeight * 0.5).pop();
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) current = navSections[navSections.length - 1];
   navLinks.forEach((a) => {
-    const on = a.hash === '#' + e.target.id;
+    const on = !!current && a.hash === '#' + current.id;
     a.classList.toggle('active', on);
     if (on) a.setAttribute('aria-current', 'true'); else a.removeAttribute('aria-current');
   });
-}), { rootMargin: '-45% 0px -50% 0px' });
-document.querySelectorAll('main > section[id]').forEach((s) => navIO.observe(s));
+}
+// Clicking a menu link centres that section on screen (sections taller than the screen line up under the header instead)
+links.addEventListener('click', (e) => {
+  const sec = e.target.hash && navSections.find((s) => '#' + s.id === e.target.hash);
+  if (!sec) return;
+  e.preventDefault();
+  const header = 56, r = sec.getBoundingClientRect();
+  const room = innerHeight - header;
+  const top = r.height < room ? r.top - header - (room - r.height) / 2 : r.top - header;
+  scrollTo({ top: scrollY + top, behavior: reduceMotion ? 'instant' : 'smooth' });
+  history.replaceState(null, '', e.target.hash);
+});
+addEventListener('scroll', () => { if (!navTicking) { navTicking = true; requestAnimationFrame(updateNav); } }, { passive: true });
+updateNav();
 
-// Timeline: scrolling moves the glowing marker up from the oldest job (bottom) toward the newest (top), lighting each job it passes
+// Timeline: starts full, then drains downward as you scroll. The marker sinks from the newest job toward the oldest (back in time) and lights each job it reaches.
 const timeline = document.querySelector('.timeline');
 const jobs = [...timeline.children];
 let ticking = false;
 function updateTimeline() {
   ticking = false;
-  const y = innerHeight * 0.95; // progress line near the bottom: finishes once the whole timeline is on screen
+  const y = innerHeight * 0.5; // the marker follows the middle of the screen
   const r = timeline.getBoundingClientRect();
-  timeline.style.setProperty('--p', Math.min(1, Math.max(0, (y - r.top) / r.height)));
-  const p = parseFloat(timeline.style.getPropertyValue('--p'));
-  const markerTop = (1 - p) * timeline.offsetHeight;
-  jobs.forEach((li) => li.classList.toggle('reached', li.offsetTop + 8 >= markerTop));
+  const travelled = Math.min(1, Math.max(0, (y - r.top) / r.height)); // 0 = at the newest job, 1 = at the oldest
+  timeline.style.setProperty('--p', 1 - travelled); // --p is how much of the line is still lit
+  const markerTop = travelled * timeline.offsetHeight;
+  jobs.forEach((li) => li.classList.toggle('reached', li.offsetTop - 8 <= markerTop));
+  const now = jobs.filter((li) => li.offsetTop - 8 <= markerTop).pop();
+  jobs.forEach((li) => li.classList.toggle('current', li === now)); // the job the marker is in gets highlighted
 }
 if (reduceMotion) {
   timeline.style.setProperty('--p', 1);
@@ -116,3 +135,35 @@ document.querySelectorAll('.count').forEach((el) => {
   };
   requestAnimationFrame(tick);
 });
+
+// Once the big Download resume button has scrolled out of view, offer the same link in the menu bar
+const siteHeader = document.querySelector('.site-header');
+new IntersectionObserver(([e]) => siteHeader.classList.toggle('show-resume', !e.isIntersecting), { rootMargin: '-56px 0px 0px 0px' })
+  .observe(document.querySelector('.btn-shake'));
+
+// Resume button: every 12s (after the shake) the label types out a nudge, holds, then goes back
+const nudgeBtn = document.querySelector('.btn-shake'), nudgeLabel = nudgeBtn.querySelector('.label');
+if (!reduceMotion) {
+  const original = nudgeLabel.textContent, nudge = 'Psst! Grab my resume!';
+  nudgeLabel.textContent = nudge; // measure the longer text so the button doesn't resize while typing
+  const w = nudgeBtn.offsetWidth;
+  nudgeLabel.textContent = original;
+  nudgeBtn.style.minWidth = Math.max(w, nudgeBtn.offsetWidth) + 'px';
+  nudgeBtn.style.textAlign = 'center';
+  var typeNudge = () => {
+    let i = 0;
+    const step = () => {
+      if (nudgeBtn.matches(':hover')) { nudgeLabel.textContent = original; return; }
+      nudgeLabel.textContent = nudge.slice(0, ++i);
+      if (i < nudge.length) setTimeout(step, 55);
+      else setTimeout(() => { nudgeLabel.textContent = original; }, 3000);
+    };
+    step();
+  };
+}
+// Shake first (CSS, .go), then type after it settles; repeats every 12s
+function startNudge() {
+  if (reduceMotion) return;
+  nudgeBtn.classList.add('go');
+  setTimeout(() => { typeNudge(); setInterval(typeNudge, 12000); }, 2040);
+}

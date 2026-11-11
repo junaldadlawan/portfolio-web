@@ -14,7 +14,7 @@
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=10">
   <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -29,13 +29,14 @@
         <li><a href="#skills">skills</a></li>
         <li><a href="#experience">experience</a></li>
         <li><a href="#contact">contact</a></li>
+        <li class="nav-resume"><a href="https://docs.google.com/document/d/1rfuIOHcXIcdWrLoxf8EgltinfysWP2np/export?format=pdf" aria-label="Download resume"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></svg> Resume</a></li>
       </ul>
     </nav>
   </header>
 
   <main>
     <section id="hero" class="hero container">
-      <img src="profile.png" alt="Juniel Aldrin Adlawan" class="avatar" width="433" height="577">
+      <div class="avatar-wrap"><img src="profile.png" alt="Juniel Aldrin Adlawan" class="avatar" width="433" height="577"></div>
       <div>
       <p class="status" aria-label="Available for freelance work"><span class="kw">const</span> status <span class="op">=</span> <span class="str">"open for freelance work"</span>;</p>
       <p class="prompt">$ whoami</p>
@@ -44,7 +45,7 @@
       <div class="cta">
         <a href="#projects" class="btn btn-primary">View projects</a>
         <a href="#contact" class="btn">Contact me</a>
-        <a href="https://docs.google.com/document/d/1rfuIOHcXIcdWrLoxf8EgltinfysWP2np/export?format=pdf" class="btn btn-shake"><span class="bubble" aria-hidden="true">Psst! Grab my resume!</span><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></svg> Download resume</a>
+        <a href="https://docs.google.com/document/d/1rfuIOHcXIcdWrLoxf8EgltinfysWP2np/export?format=pdf" class="btn btn-shake"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-5-5 5 5 5-5M5 21h14"/></svg> <span class="label">Download resume</span></a>
       </div>
       <ul class="stats">
         <li><strong><span class="count" data-to="6">6</span><span class="plus">+</span> yrs</strong><span>enterprise experience</span></li>
@@ -218,6 +219,6 @@
     <p>&copy; <span id="year"></span> Juniel Aldrin Adlawan</p>
   </footer>
 
-  <script src="script.js"></script>
+  <script src="script.js?v=6"></script>
 </body>
 </html>

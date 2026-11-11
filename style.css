@@ -47,9 +47,9 @@ section { padding-block: 4rem; }
   backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--border);
 }
-.nav { display: flex; align-items: center; justify-content: space-between; height: 3.5rem; }
+.nav { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; height: 3.5rem; }
 .logo { color: var(--text); font-weight: 700; }
-.nav-links { display: flex; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
+.nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; margin: 0; padding: 0; }
 .nav-links a { color: var(--muted); }
 .nav-links a.active { color: var(--accent); }
 .nav-links a:hover { color: var(--accent); text-decoration: none; }
@@ -60,8 +60,22 @@ section { padding-block: 4rem; }
   padding: .3rem .7rem; font: inherit; cursor: pointer;
 }
 
+/* Resume link in the menu bar: appears once the big Download resume button has scrolled out of view */
+.nav-resume { max-width: 0; margin-left: -1.5rem; overflow: hidden; white-space: nowrap; opacity: 0; visibility: hidden; transition: max-width .3s, margin .3s, opacity .3s, visibility .3s; }
+.show-resume .nav-resume { max-width: 14rem; margin-left: 0; overflow: visible; opacity: 1; visibility: visible; }
+.nav-links .nav-resume a { display: block; line-height: 1.5; color: var(--accent); border: 1px solid var(--accent); border-radius: 4px; padding: .2rem .7rem; }
+.nav-links .nav-resume a:hover { background: var(--accent); color: var(--bg); }
+
 /* Hero */
 .hero { min-height: 80vh; display: grid; grid-template-columns: auto 1fr; gap: 3rem; align-items: center; }
+/* Soft shadow below the round photo (absolute, so the photo keeps its place) */
+.avatar-wrap { position: relative; }
+.avatar-wrap .avatar { display: block; }
+.avatar-wrap::after {
+  content: ""; position: absolute; left: 0; right: 0; top: calc(100% + 96px); height: 40px;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, .3), transparent 70%);
+  filter: blur(3px);
+}
 .avatar {
   width: 220px; height: 220px; object-fit: cover; object-position: center 35%;
   border-radius: 50%; border: 3px solid var(--accent);
@@ -99,33 +113,15 @@ section { padding-block: 4rem; }
 .btn:hover, .btn-primary { background: var(--accent); color: var(--bg); text-decoration: none; }
 .btn-primary:hover { background: transparent; color: var(--accent); }
 
-/* 12s cycle: small shake, pause, lean right, straighten up, then a round speech balloon inflates from the button's top-right corner. Stops on hover. */
-.btn-shake { position: relative; animation: shake 12s ease-in-out 2s infinite; }
+/* 12s cycle: small shake, pause, lean right, straighten up, then the label types out a nudge (see script.js). Stops on hover. */
+.btn-shake { position: relative; }
+.btn-shake.go { animation: shake 12s ease-in-out infinite; } /* .go is added by script.js once the tagline has finished typing */
 .btn-shake:hover { animation: none; }
 @keyframes shake {
   0%, 5%, 11%, 16%, 100% { transform: none; }
   .8%, 2.4%, 4% { transform: translateX(-2px) rotate(-1deg); }
   1.6%, 3.2% { transform: translateX(2px) rotate(1deg); }
   12.5%, 14% { transform: rotate(4deg); }
-}
-.bubble {
-  position: absolute; left: calc(100% - 28px); bottom: calc(100% - 1px);
-  display: grid; place-items: center; width: 150px; height: 108px; padding: .5rem 1.1rem 1.5rem;
-  text-align: center; line-height: 1.15; pointer-events: none; color: #111;
-  /* one outlined shape: oval + pointed tail at the bottom-left */
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 108'%3E%3Cpath d='M58 87.8 28 104 42 84.2A72 43 0 1 1 58 87.8Z' fill='white' stroke='%23111' stroke-width='3' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat 0 0 / 100% 100%;
-  filter: drop-shadow(3px 3px 0 #000); /* comic-book hard shadow */
-  font: 700 .9rem "Comic Sans MS", "Comic Neue", var(--sans);
-  opacity: 0; transform: scale(0); transform-origin: 19% 96%; /* pops out of the corner */
-  animation: bubble 12s ease-out 2s infinite;
-}
-.btn-shake:hover .bubble { animation: none; opacity: 0; }
-@keyframes bubble {
-  0%, 17% { opacity: 0; transform: scale(0); }
-  19% { opacity: 1; transform: scale(1.12); } /* quick pop-in */
-  20.5% { transform: scale(.97); }
-  22%, 46% { opacity: 1; transform: scale(1); }
-  46.1%, 100% { opacity: 0; transform: scale(1); } /* vanishes instantly, no fade */
 }
 
 /* Projects */
@@ -182,7 +178,7 @@ section { padding-block: 4rem; }
   transition: background .3s, box-shadow .3s;
 }
 .timeline > li.reached::before { background: var(--accent); box-shadow: 0 0 0 4px rgba(255, 138, 61, .2); }
-/* Orange line fills upward from the oldest job as you scroll, with a glowing marker at its tip */
+/* Orange line starts full and drains downward as you scroll; the glowing marker sits at the top of what is left */
 .timeline::before {
   content: ""; position: absolute; left: -2px; bottom: 0; width: 2px;
   top: calc((1 - var(--p)) * 100%);
@@ -195,6 +191,10 @@ section { padding-block: 4rem; }
   z-index: 1;
 }
 .date { color: var(--muted); font-size: .85rem; }
+/* the job the marker is in: its text pops (full brightness, nudged right) while the others dim slightly; the dot and line are untouched */
+.timeline > li > * { opacity: .6; transition: opacity .3s, transform .3s, color .3s; }
+.timeline > li.current > * { opacity: 1; transform: translateX(6px); }
+.timeline > li.current ul li, .timeline > li.current h3, .timeline > li.current p { color: #fff; }
 .timeline p { color: var(--muted); margin: 0 0 .5rem; }
 .timeline h4 { margin: .75rem 0 .25rem; font-size: .95rem; color: var(--accent); }
 .timeline ul { margin: 0; padding-left: 1.1rem; }
@@ -209,13 +209,17 @@ footer { padding-block: 2rem; border-top: 1px solid var(--border); color: var(--
   .nav-toggle { display: block; }
   .hero { grid-template-columns: 1fr; gap: 1.5rem; align-content: center; }
   .avatar { width: 140px; height: 140px; }
+  .avatar-wrap::after { height: 24px; top: calc(100% + 40px); }
   .nav-links {
     display: none;
     position: absolute; top: 3.5rem; left: 0; right: 0;
-    flex-direction: column; gap: 0;
+    flex-direction: column; align-items: stretch; gap: 0;
     background: var(--bg); border-bottom: 1px solid var(--border);
   }
   .nav-links.open { display: flex; }
+  .nav-resume { display: none; max-width: none; margin-left: 0; }
+  .show-resume .nav-resume { display: block; max-width: none; }
+  .nav-links .nav-resume a { border: 0; border-radius: 0; padding: .9rem 1.5rem; }
   .nav-links a { display: block; padding: .9rem 1.5rem; }
   section { padding-block: 3rem; }
 }
@@ -224,4 +228,9 @@ footer { padding-block: 2rem; border-top: 1px solid var(--border); color: var(--
   html { scroll-behavior: auto; }
   * { transition: none !important; animation: none !important; }
   .js .reveal { opacity: 1; transform: none; }
+}
+
+/* Phones */
+@media (max-width: 640px) {
+  .card-img { width: 65%; } /* smaller project screenshot on phones */
 }
